@@ -1,0 +1,7 @@
+test*
+test_*
+.idea
+vinautil.egg-info
+dist
+data
+build
