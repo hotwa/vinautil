@@ -5,3 +5,5 @@ vinautil.egg-info
 dist
 data
 build
+*.pyc
+__pycache__
