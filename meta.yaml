@@ -1,12 +1,12 @@
 package:
   name: vinautil
-  version: 0.0.3
+  version: 0.0.4
 
 source:
   path: /home/lyzeng/vinautil
 
 build:
-  number: 5
+  number: 1
   skip: True  # [not linux64]
 #  script: python -m pip install . --no-deps --ignore-installed -vv
 
