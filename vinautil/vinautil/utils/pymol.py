@@ -110,6 +110,11 @@ class api():
         omol = list(pybel.readfile(format = 'mol2', filename = file))[0]
         omol.OBMol.AddPolarHydrogens()
         omol.write('mol2',out_file,overwrite=True)
+        def mol2add(file,out_file,fmt='mol2'):
+            mols = pybel.readfile(fmt, file)
+            mol = next(mols)
+            mol.OBMol.AddPolarHydrogens()
+            mol.write(fmt,out_file,overwrite=True)
         """
         cmd.delete("all")
         cmd.h_add(selection) # add all hydrogens in this molecular

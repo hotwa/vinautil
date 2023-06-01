@@ -3,7 +3,8 @@ from pathlib import Path
 from openbabel import pybel
 from typing import Optional, NoReturn, List, Union, Dict, Tuple
 import re
-
+import tempfile, os
+import numpy as np
 
 
 @dataclass
@@ -73,31 +74,60 @@ class PDBQTparser:
             return atom_counts[0]
         else:
             raise ValueError("Structures have different numbers of atoms.")
+      
+    @staticmethod
+    def pose_coords(pdbqt_string: str, remove_H = True) -> np.array:
+        mol_pose = pybel.readstring('pdbqt', pdbqt_string)
+        if remove_H: mol_pose.OBMol.DeleteHydrogens()
+        # 创建一个空的numpy数组，用来存储坐标信息
+        coords = np.empty((len(mol_pose.atoms), 3))
+        # 遍历mol_pose1的原子，把每个原子的坐标赋值给coords数组
+        for i, atom in enumerate(mol_pose.atoms):
+            coords[i] = atom.coords
+        return coords
+    
+    @staticmethod
+    def rmsd(pose_ref:np.array, pose:np.array):
+        # 计算两个数组之间的差值，然后对每个元素平方
+        diff = pose_ref - pose
+        diff_squared = diff ** 2
+        assert len(pose_ref) == len(pose)
+        N = len(pose_ref)
+        # 对平方后的数组求和，然后除以原子个数N，最后开平方根
+        sum_diff_squared = diff_squared.sum ()
+        rmsd = np.sqrt (sum_diff_squared / N)
+        return rmsd
 
 
 
 @dataclass
 class PDBQTtoMol2:
     '''
-    pdbqt 还原为mol2格式，还原健价信息
+    pdbqt 还原为mol2格式，还原健价信息, 删除所有氢元素方便后续计算RMSDß
     '''
-    original_mol2_file: Path
-    undock_pdbqt: Path
-    docked_pdbqt: Path
+    original_mol2_file: str
+    undock_pdbqt: str
+    docked_pdbqt: List[str] # autodock vina outputs
     pybel_mol: (List[pybel.Molecule], type(None)) = field(init=False)
 
     def __post_init__(self):
-        docked_pdbqt_pybel_mol = list(pybel.readfile('pdbqt', self.docked_pdbqt.as_posix()))
+        docked_pdbqt_pybel_mol = [pybel.readstring('pdbqt', i) for i in self.docked_pdbqt]
         self.pybel_mol = self.get_pybel_mol(docked_pdbqt_pybel_mol)
-
+    
+    @staticmethod
+    def get_coord_dict(fmt: str, file_string: str, removeHs: bool = True) -> dict:
+        molH = pybel.readstring(fmt, file_string) # read first molecule
+        if removeHs: molH.OBMol.DeleteHydrogens()
+        return {atom.idx: atom.coords for atom in molH}
+    
     def get_pybel_mol(self, docked_pdbqt_pybel_mol) -> List[pybel.Molecule]:
         '''
         mind refence https://github.com/ag83/pdbqt-to-mol2/blob/be40bdda20ffb96cd3d173accf77e7a2da9a49aa/convert_to_mol2.py#L15
         convert autodock vina dock results restore to mol2 format, which include bond infomations
         :return: pybel.Molecule or None
         '''
-        undocked_pdbqt = PDBQTparser.get_coord_dict('pdbqt', self.undock_pdbqt, removeHs=False)
-        original_mol2 = PDBQTparser.get_coord_dict('mol2', self.original_mol2_file, removeHs=False)
+        undocked_pdbqt = self.get_coord_dict('pdbqt', self.undock_pdbqt)
+        original_mol2 = self.get_coord_dict('mol2', self.original_mol2_file)
         if len(docked_pdbqt_pybel_mol) == 1:
             i_coords = {atom.idx: atom.coords for atom in docked_pdbqt_pybel_mol[0]}
             mol = self.__update_coordinates(docked_pdbqt=i_coords, undocked_pdbqt=undocked_pdbqt, original_mol2=original_mol2)
@@ -164,7 +194,7 @@ class PDBQTtoMol2:
             coord_conform = {}
             for index1, index2 in coord_map.items():
                 coord_conform.update({index1: docked_pdbqt.get(index2)})
-            mol2 = next(pybel.readfile('mol2', self.original_mol2_file.as_posix()))
+            mol2 = pybel.readstring('mol2', self.original_mol2_file)
             mol2.OBMol.DeleteHydrogens()
             for atom in mol2:
                 atom.OBAtom.SetVector(coord_conform.get(atom.idx)[0], coord_conform.get(atom.idx)[1],

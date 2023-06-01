@@ -33,6 +33,7 @@ requirements:
     - conda-forge::ipython
     - conda-forge::peewee
     - conda-forge::scipy
+    - conda-forge::biopython
     - conda-forge::prody # meeko dependecy (optionally, for covalent docking)
 
 about:
