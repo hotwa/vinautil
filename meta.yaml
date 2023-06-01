@@ -34,8 +34,6 @@ requirements:
     - conda-forge::peewee
     - conda-forge::scipy
     - conda-forge::prody # meeko dependecy (optionally, for covalent docking)
-    - pip:
-      - meeko
 
 about:
   home: https://github.com/hotwa/vinautil.git
