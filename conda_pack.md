@@ -1,18 +1,19 @@
-before use this package：
-
-## install autodock vina 1.2.3
+## install vinautil
 
 ```shell
-$ conda create -n vina python=3
-$ conda activate vina
-$ conda config --env --add channels conda-forge
-$ conda install -c conda-forge numpy swig boost-cpp sphinx sphinx_rtd_theme
-$ pip install vina
+conda create -n scar python=3 -y
+conda install -c lyzeng vinautil -y
 ```
 
-test code
+## build anaconda package
 
-```python
-from Vina import vina
+```shell
+conda create -n condabuild python=3 -y
+conda activate condabuild
+conda install conda-build anaconda-client -y
+cd <source code dir>
+anaconda login
+conda build .
+anaconda upload /path/to/conda-package.tar.bz2
 ```
 
