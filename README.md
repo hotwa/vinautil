@@ -4,19 +4,31 @@ English | [中文](./README_cn.md)
 
 All the codes in this repository were developed by Lingyu Zeng while he was pursuing a graduate degree in the School of Biological Engineering and Food at Hubei University of Technology. Some of the codes can be used to reproduce the results of Zeng's work during his master's degree, and the codes are for reference.
 
-The code is mainly developed for [autodock vina](https://vina.scripps.edu/) and [SCARdock](https://pubs.acs.org/doi/10.1021/acs.jcim.6b00334)
+The code primarily focuses on the development of [AutoDock Vina](https://vina.scripps.edu/) and [SCARdock](https://pubs.acs.org/doi/10.1021/acs.jcim.6b00334).
+
+[SCARdock web site](https://scardock.com) for covalent inhibitor screening.
 
 The package can also handle PDB files as well as small molecule files.
 
 ## Environment require
 
 ```shell
-python >3.9
-openbabel >3.0.0
-pandas >1.2.0
-rdkit =2022.03.5
-pymol-open-source =2.5.0
-loguru
+python >3.8
+conda-forge::pandas >1.2.0
+conda-forge::openbabel >3.0.0
+conda-forge::rdkit
+conda-forge::pymol-open-source
+conda-forge::loguru
+conda-forge::numpy
+conda-forge::swig
+conda-forge::boost-cpp
+conda-forge::sphinx
+conda-forge::sphinx_rtd_theme
+conda-forge::vina
+conda-forge::ipython
+conda-forge::peewee
+conda-forge::scipy
+conda-forge::prody  # meeko dependency (optionally, for covalent docking)
 ```
 
 [more package](./environment.yml)
@@ -26,17 +38,9 @@ loguru
 ### Install
 
 ```shell
-conda create -n vina_env python=3.9 --yes
+conda create -n vina_env python=3 --yes
 conda activate vina_env
 conda install -c pylyzeng vinautil
-```
-
-### Install from source
-
-```shell
-git clone https://github.com/hotwa/vinautil.git
-cd vinautil
-python setup.py install
 ```
 
 ### Build method
