@@ -6,7 +6,7 @@ source:
   path: /home/lyzeng/vinautil
 
 build:
-  number: 2
+  number: 3
   skip: True  # [not linux64]
 #  script: python -m pip install . --no-deps --ignore-installed -vv
 
@@ -14,7 +14,9 @@ requirements:
   host:
     - python >3.8
     - conda-forge::pyyaml
+    - pip
     - setuptools
+    - git
   run:
     - python >3.8
     - conda-forge::pandas >1.2.0
@@ -30,6 +32,10 @@ requirements:
     - conda-forge::vina
     - conda-forge::ipython
     - conda-forge::peewee
+    - conda-forge::scipy
+    - conda-forge::prody # meeko dependecy (optionally, for covalent docking)
+    - pip:
+      - meeko
 
 about:
   home: https://github.com/hotwa/vinautil.git
