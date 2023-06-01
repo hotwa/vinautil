@@ -6,7 +6,7 @@ source:
   path: /home/lyzeng/vinautil
 
 build:
-  number: 3
+  number: 5
   skip: True  # [not linux64]
 #  script: python -m pip install . --no-deps --ignore-installed -vv
 
@@ -19,8 +19,8 @@ requirements:
     - git
   run:
     - python >3.8
-    - conda-forge::pandas >1.2.0
-    - conda-forge::openbabel >3.0.0
+    - conda-forge::pandas
+    - conda-forge::openbabel
     - conda-forge::rdkit
     - conda-forge::pymol-open-source
     - conda-forge::loguru
