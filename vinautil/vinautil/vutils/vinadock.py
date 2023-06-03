@@ -1,4 +1,5 @@
 from pathlib import Path
+from vina import Vina
 
 # ------dockvina1.2.3 example script------
 
