@@ -1,38 +1,37 @@
 package:
   name: vinautil
-  version: 0.0.4
+  version: 0.0.6
 
 source:
   path: /home/lyzeng/vinautil
 
 build:
-  number: 1
+  number: 3
   skip: True  # [not linux64]
 #  script: python -m pip install . --no-deps --ignore-installed -vv
 
 requirements:
   host:
-    - python >3.8
+    - python =3.10
     - conda-forge::pyyaml
     - pip
     - setuptools
     - git
   run:
-    - python >3.8
+    - python =3.10
+    - bioconda::mgltools
+    - conda-forge::spyrmsd
     - conda-forge::pandas
     - conda-forge::openbabel
     - conda-forge::rdkit
-    - conda-forge::pymol-open-source
+    - conda-forge::pymol-open-source 2.5.0 py310h292d129_6
     - conda-forge::loguru
-    - conda-forge::numpy
     - conda-forge::swig
-    - conda-forge::boost-cpp
+    - conda-forge::boost-cpp 
     - conda-forge::sphinx
     - conda-forge::sphinx_rtd_theme
-    - conda-forge::vina
+    - conda-forge::vina 1.2.3 py310he924329_2
     - conda-forge::ipython
-    - conda-forge::peewee
-    - conda-forge::scipy
     - conda-forge::biopython
     - conda-forge::prody # meeko dependecy (optionally, for covalent docking)
 

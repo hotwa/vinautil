@@ -1,8 +1,7 @@
 ## install vinautil
 
 ```shell
-conda create -n scar python=3 -y
-conda install -c lyzeng vinautil -y
+conda create -n my_env_test -c pylyzeng vinautil -y
 ```
 
 ## build anaconda package
@@ -16,4 +15,5 @@ anaconda login
 conda build .
 anaconda upload /path/to/conda-package.tar.bz2
 ```
+
 

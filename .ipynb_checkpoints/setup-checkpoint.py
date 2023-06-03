@@ -25,15 +25,12 @@ setup(
         'Operating System :: OS Independent',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3 :: Only",
     ],
     keywords=["tools", "autodock vina"],
     package_dir={"": "vinautil"},  # Optional
-    packages=['vinautil', 'vinautil.utils', 'vinautil.pymol'],
-    python_requires='>3.8',
+    packages=['vinautil', 'vinautil.vutils', 'vinautil.pymolutils'],
+    python_requires='>=3.9',
     install_requires=[],
     dependency_links=[
         "https://github.com/openbabel/openbabel"

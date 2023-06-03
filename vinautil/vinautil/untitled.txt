@@ -1,0 +1,17 @@
+    - bioconda::mgltools
+    - conda-forge::spyrmsd
+    - conda-forge::pandas
+    - conda-forge::openbabel
+    - conda-forge::rdkit
+    - conda-forge::pymol-open-source
+    - conda-forge::loguru
+    - conda-forge::swig
+    - conda-forge::boost-cpp
+    - conda-forge::sphinx
+    - conda-forge::sphinx_rtd_theme
+    - conda-forge::vina
+    - conda-forge::ipython
+    - conda-forge::biopython
+    - conda-forge::prody # meeko dependecy (optionally, for covalent docking)
+    
+conda install mgltools spyrmsd pandas openbabel rdkit pymol-open-source loguru numpy swig boost-cpp sphinx sphinx_rtd_theme vina ipython scipy biopython prody
