@@ -16,7 +16,7 @@ from openbabel import pybel
 try:
     from .typecheck import typeassert
 except ImportError:
-    from utils.typecheck import typeassert
+    from vutils.typecheck import typeassert
 
 @typeassert(file=Path, fmt=str)
 class molecule:
