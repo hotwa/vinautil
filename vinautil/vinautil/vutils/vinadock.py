@@ -1,9 +1,8 @@
 from pathlib import Path
 from vina import Vina
 
-# ------dockvina1.2.3 example script------
-
-def dockvina(receptor='1iep_receptor.pdbqt',ligand='1iep_ligand.pdbqt',center=[15.190, 53.903, 16.917],box_size=[20, 20, 20],exhaustiveness=32,n_poses=20,out_n_poses = 5):
+def dockvina(receptor, ligand, center, box_size, exhaustiveness=32,n_poses=20,out_n_poses = 5):
+    out_stem = {Path(receptor).stem}--{Path(ligand).stem}
     v = Vina(sf_name='vina')
     v.set_receptor(receptor)
     v.set_ligand_from_file(ligand)
@@ -14,7 +13,7 @@ def dockvina(receptor='1iep_receptor.pdbqt',ligand='1iep_ligand.pdbqt',center=[1
     # Minimized locally the current pose
     energy_minimized = v.optimize()
     print('Score after minimization : %.3f (kcal/mol)' % energy_minimized[0])
-    v.write_pose('1iep_ligand_minimized.pdbqt', overwrite=True)
+    v.write_pose(f'{out_stem}_minimized.pdbqt', overwrite=True)
     # Dock the ligand
     v.dock(exhaustiveness=exhaustiveness, n_poses=n_poses)
-    v.write_poses('1iep_ligand_vina_out.pdbqt', n_poses=out_n_poses, overwrite=True)
+    v.write_poses(f'{out_stem}.pdbqt', n_poses=out_n_poses, overwrite=True)
