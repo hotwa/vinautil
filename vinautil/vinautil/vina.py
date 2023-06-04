@@ -11,8 +11,8 @@ import sys
 
 import numpy as np
 
-from .vina_wrapper import Vina as _Vina
-from . import utils
+from vina.vina_wrapper import Vina as _Vina
+from vina import utils
 
 
 class Vina:
