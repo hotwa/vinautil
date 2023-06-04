@@ -38,7 +38,7 @@ setup(
     platforms=["linux-64"],
     entry_points={
         'console_scripts': [
-            'SCARdock = vinautil.scardock',  # Replace 'my_module' with the actual module that contains SCARdock function
+            'SCARdock = vinautil.scardock:SCARdock',  # Replace 'my_module' with the actual module that contains SCARdock function
         ],
     },
 )
