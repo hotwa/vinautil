@@ -11,44 +11,66 @@ English(./README.md) | [中文]
 
 ## 环境
 
-```shell
-python >3.8
-conda-forge::pandas >1.2.0
-conda-forge::openbabel >3.0.0
-conda-forge::rdkit
-conda-forge::pymol-open-source
-conda-forge::loguru
-conda-forge::numpy
-conda-forge::swig
-conda-forge::boost-cpp
-conda-forge::sphinx
-conda-forge::sphinx_rtd_theme
-conda-forge::vina
-conda-forge::ipython
-conda-forge::peewee
-conda-forge::scipy
-conda-forge::prody  # meeko dependecy (optionally, for covalent docking)
+```yaml
+- python =3.10
+- bioconda::mgltools
+- conda-forge::spyrmsd
+- conda-forge::pandas
+- conda-forge::openbabel
+- conda-forge::rdkit
+- conda-forge::pymol-open-source 2.5.0 py310h292d129_6
+- conda-forge::loguru
+- conda-forge::swig
+- conda-forge::boost-cpp 
+- conda-forge::sphinx
+- conda-forge::sphinx_rtd_theme
+- conda-forge::vina 1.2.3 py310he924329_2
+- conda-forge::ipython
+- conda-forge::biopython
+- conda-forge::prody # meeko dependecy (optionally, for covalent docking)
 ```
-
-[更多参考](./environment.yml)
 
 ## 使用
 
 ### 安装
 
 ```shell
-conda create -n vina_env python=3 --yes
-conda activate vina_env
-conda install -c pylyzeng vinautil
+conda install -n vinautil_env -c pylyzeng vinautil --yes
+conda activate vinautil_env
+```
+
+### 测试
+
+```shell
+scardocktest
+```
+
+### 对接
+
+```shell
+scardock --help
+usage: scardock [-h] [-r [recepotr file]] [-l [ligand file]] [-s [residue covalent site]] [-c [covalent chain ID]]
+                [-log [output log directory]]
+
+SCARdock Docking
+
+options:
+  -h, --help            show this help message and exit
+  -r [recepotr file], --receptor [recepotr file]
+                        recepotr file, support pdb
+  -l [ligand file], --ligand [ligand file]
+                        ligand file, molecule file (MOL2, SDF,...)(use meeko prepare)
+  -s [residue covalent site], --site [residue covalent site]
+                        residue covalent site
+  -c [covalent chain ID], --chain [covalent chain ID]
+                        covalent chain ID
+  -log [output log directory], --log_dir [output log directory]
+                        Relative Path
 ```
 
 ### 代码安装
 
-```shell
-git clone https://github.com/hotwa/vinautil.git
-cd vinautil
-python setup.py install
-```
+推荐使用conda安装
 
 ### [构建](./conda_pack.md)
 
