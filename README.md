@@ -36,7 +36,7 @@ It can also handle PDB files and small molecule files.
 ### Installation
 
 ```shell
-conda install -n vinautil_env -c pylyzeng vinautil --yes
+conda create -n vinautil_env -c pylyzeng vinautil --yes
 conda activate vinautil_env
 ```
 
