@@ -25,7 +25,7 @@ def Mutagenesis_site(filename: Path, mutation_type: str, site: int, outfile: Pat
     savename = p.stem + f"_{site}_mutation.pdb"
     _out_file = Path(outfile) if outfile else p.absolute().parent.joinpath(savename)
     if not _out_file.absolute().parent.exists(): _out_file.absolute().parent.mkdir(parents=True)
-    cmd.delete('all')  # ! clean up
+    cmd.reinitialize('everything')  # ! clean up
     cmd.load(filename.as_posix())
     PDBs = cmd.get_names()
     # Get the ID numbers of c-alpha (CA) atoms of all residues
@@ -62,5 +62,5 @@ def Mutagenesis_site(filename: Path, mutation_type: str, site: int, outfile: Pat
     ##to have pdb files only with the residue-specific single-point mutation you were interested.
     cmd.set_wizard("done")
     cmd.save(_out_file.as_posix(), f"{PDB}")
-    cmd.delete('all')  # Reinitialize PyMOL to default settings.
+    cmd.reinitialize('everything')  # Reinitialize PyMOL to default settings.
     return _out_file
