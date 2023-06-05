@@ -43,6 +43,8 @@ conda activate vinautil_env
 ### Test
 
 ```shell
+# before test need execute:
+scardock -h
 scardocktest
 ```
 
