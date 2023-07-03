@@ -13,6 +13,8 @@ import pandas as pd
 from Bio.PDB.PDBParser import PDBParser
 from Bio.PDB import PDBIO, Select, parse_pdb_header, PDBList
 from pathlib import Path
+from pdbfixer import PDBFixer
+from openmm.app import PDBFile
 
 try:
     from .typecheck import typeassert
@@ -128,6 +130,67 @@ class Bdp(object):
             return _doi
         else:
             raise DoiError(f'current pdb does not doi, {_journal}')
+
+    def cleanATOM(self, out_file=None, ext="_clean.pdb") -> Path: # from pyrosetta.toolbox import cleanATOM
+        """Extract all ATOM and TER records in a PDB file and write them to a new file.
+
+        Args:
+            pdb_file (str): Path of the PDB file from which ATOM and TER records
+                will be extracted
+            out_file (str): Optional argument to specify a particular output filename.
+                Defaults to <pdb_file>.clean.pdb.
+            ext (str): File extension to use for output file. Defaults to ".clean.pdb"
+        """
+        pdb_file = self.path.as_posix()
+        # find all ATOM and TER lines
+        with open(pdb_file, "r") as fid:
+            good = [l for l in fid if l.startswith(("ATOM", "TER"))]
+
+        # default output file to <pdb_file>_clean.pdb
+        if out_file is None:
+            out_file = os.path.splitext(pdb_file)[0] + ext
+
+        # write the selected records to a new file
+        with open(out_file, "w") as fid:
+            fid.writelines(good)
+        return Path(out_file)
+
+    def fix_pdb(self):
+        path = self.path.parent.as_posix()
+        pdb_id = self.path.as_posix()
+        print("Creating PDBFixer...")
+        fixer = PDBFixer(pdb_id)
+        print("Finding missing residues...")
+        fixer.findMissingResidues()
+
+        chains = list(fixer.topology.chains())
+        keys = fixer.missingResidues.keys()
+        for key in list(keys):
+            chain = chains[key[0]]
+            if key[1] == 0 or key[1] == len(list(chain.residues())):
+                print("ok")
+                del fixer.missingResidues[key]
+
+        print("Finding nonstandard residues...")
+        fixer.findNonstandardResidues()
+        print("Replacing nonstandard residues...")
+        fixer.replaceNonstandardResidues()
+        print("Removing heterogens...")
+        fixer.removeHeterogens(keepWater=True)
+
+        print("Finding missing atoms...")
+        fixer.findMissingAtoms()
+        print("Adding missing atoms...")
+        fixer.addMissingAtoms()
+        print("Adding missing hydrogens...")
+        fixer.addMissingHydrogens(7)
+        print("Writing PDB file...")
+
+        PDBFile.writeFile(
+            fixer.topology,
+            fixer.positions,
+            open(os.path.join(path, "%s_fixed_pH_%s.pdb" % (pdb_id.split('.')[0], 7)), "w"), keepIds=True)
+        return "%s_fixed_pH_%s.pdb" % (pdb_id.split('.')[0], 7)
 
     def residuesequence(self, label):  # 'HETATM' 'ATOM'
         df = self.transformtodataframe(path=self.path, first_label=label)

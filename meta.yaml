@@ -19,6 +19,8 @@ requirements:
     - git
   run:
     - python =3.10
+    - conda-forge::pdbfixer
+    - conda-forge::openmm
     - bioconda::mgltools
     - conda-forge::spyrmsd
     - conda-forge::pandas
