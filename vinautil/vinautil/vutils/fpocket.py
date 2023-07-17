@@ -101,6 +101,27 @@ class fpocket_calulate:
         centroid = np.mean(atoms, axis=0)
         return list(centroid)
 
+    def _get_center_by_bounds(self, num: int):
+        pocket_pdbfile = self.out_dir.joinpath(f'pockets/pocket{num}_atm.pdb')
+        with open(pocket_pdbfile, 'r') as file:
+            lines = file.readlines()
+        # 提取原子坐标
+        atoms = []
+        for line in lines:
+            if line.startswith('ATOM'):
+                x = float(line[30:38])
+                y = float(line[38:46])
+                z = float(line[46:54])
+                atoms.append([x, y, z])
+        # 将坐标转换为numpy数组
+        atoms = np.array(atoms)
+        # 计算每个坐标轴的最大值和最小值
+        min_values = np.min(atoms, axis=0)
+        max_values = np.max(atoms, axis=0)
+        # 计算中心点
+        center = (min_values + max_values) / 2
+        return list(center)
+
     def _get_vina_box(self, num: int):
         return self.info[num - 1]['AutoDock Vina Box']
 
