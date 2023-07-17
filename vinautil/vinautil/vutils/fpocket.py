@@ -108,7 +108,7 @@ class fpocket_calulate:
         # 使用MDTraj加载分子动力学轨迹
         trajectory = md.load(self.pdb_file.as_posix())
 
-        vina_box = ins._get_vina_box(num)
+        vina_box = self._get_vina_box(num)
         center = vina_box['center']
         size = vina_box['size']
 
