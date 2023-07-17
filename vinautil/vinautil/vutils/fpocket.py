@@ -29,11 +29,11 @@ class fpocket_calulate:
 
     def __post_init__(self):
         self.out_dir = self._search_pocket()
-        self.info = self._get_info()
+        self.info = self.__get_info()
 
     @property
     def pocket_number(self):
-        return len(self._get_info())
+        return len(self.info)
 
     def _search_pocket(self):
         fpocket_results = self.pdb_file.parent.joinpath(f'{self.pdb_file.stem}_out')
@@ -56,7 +56,7 @@ class fpocket_calulate:
             print(f'''Task record : {datetime.datetime.now()}:\n {subprocess_read_res}''')
         print(f'Analyse {self.pdb_file.as_posix()} sucess!')
 
-    def _get_info(self):
+    def __get_info(self):
         info_txt = list(self.out_dir.glob('*_info.txt'))[0]
         # 读取_info.txt文件
         with open(info_txt.as_posix(), "r") as file:
@@ -75,6 +75,10 @@ class fpocket_calulate:
             for line in pocket_info:
                 key, value = line.split(":")
                 pocket[key.strip()] = value.strip()
+                if key.strip() == 'Cent. of mass - Alpha Sphere max dist':
+                    size = math.ceil(float(value.strip()) * 2)
+                    center = self._get_mass_center(pocket_index)
+                    pocket['AutoDock Vina Box'] = {'center': center, 'size': [size, size, size]}
             # 将口袋字典添加到口袋列表中
             pockets.append(pocket)
         return pockets
@@ -97,12 +101,8 @@ class fpocket_calulate:
         centroid = np.mean(atoms, axis=0)
         return list(centroid)
 
-    def _get_vina_box_size(self, num: int):
-        return math.ceil(float(self.info[num]['Cent. of mass - Alpha Sphere max dist']) * 2)
-
     def _get_vina_box(self, num: int):
-        n = self._get_vina_box_size(num)
-        return {'center': self._get_mass_center(num), 'size': [n, n, n]}
+        return self.info[num - 1]['AutoDock Vina Box']
 
     def _get_box_view(self, num: int):
         # 使用MDTraj加载分子动力学轨迹
