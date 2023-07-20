@@ -37,7 +37,7 @@ class fpocket_calulate:
 
     def _search_pocket(self):
         fpocket_results = self.pdb_file.parent.joinpath(f'{self.pdb_file.stem}_out')
-        if not fpocket_results.exists:
+        if not fpocket_results.exists():
             self._subprocess_fpocket()
             return fpocket_results
         else:
