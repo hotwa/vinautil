@@ -3,9 +3,9 @@
 '''
 @file               :deeppocket
 @Description:       :
-@Date               :2023/7/16 11:09:36
+@Date               :2023/7/15 11:09:36
 @Author             :lyzeng
-@mail               :pylyzeng@gmail.com       
+@mail               :pylyzeng@gmail.com
 @version            :1.0
 '''
 from dataclasses import dataclass, field
@@ -277,17 +277,6 @@ class deeppocket:
         x_start, y_start, z_start = pocket['x_start'], pocket['y_start'], pocket['z_start']
         x_end, y_end, z_end = pocket['x_end'], pocket['y_end'], pocket['z_end']
 
-        view = self._nglview_box(view, x_start, y_start, z_start, x_end, y_end, z_end, color, cylinder_radius)
-
-        if add_mesh:
-            atoms = self.get_atoms_in_box(pocket)
-            chains = list(set([i.chain for i in atoms]))
-            pocket_dict = {chain: [atom.resi for atom in atoms if atom.chain == chain] for chain in chains}
-            self._add_mesh(view, pocket_dict, opacity=opacity, color_scheme=color_scheme)
-
-        return view
-
-    def _nglview_box(self, view:nv.widget.NGLWidget, x_start, y_start, z_start, x_end, y_end, z_end, color:list, cylinder_radius: float)->nv.widget.NGLWidget:
         # 定义长方体的16个边的端点
         edges = [
             [[x_start, y_start, z_start], [x_start, y_start, z_end]],
@@ -311,6 +300,12 @@ class deeppocket:
         # 添加圆柱体来表示长方体的边
         for start, end in edges:
             view.shape.add_cylinder(start, end, color, cylinder_radius)
+
+        if add_mesh:
+            atoms = self.get_atoms_in_box(pocket)
+            chains = list(set([i.chain for i in atoms]))
+            pocket_dict = {chain: [atom.resi for atom in atoms if atom.chain == chain] for chain in chains}
+            self._add_mesh(view, pocket_dict, opacity=opacity, color_scheme=color_scheme)
 
         return view
 
