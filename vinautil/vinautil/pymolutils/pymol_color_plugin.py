@@ -86,15 +86,14 @@ class atom():
 class method():
 
     @staticmethod
-    def optimisation(grey=True):
+    def optimisation(grey=True, selection='sele'):
         colorp.defcolor()
-        print('color optimisation')# 常规优化
-        if grey: cmd.set('cartoon_color','grey1')
-        cmd.set('stick_transparency','0.1')
-        cmd.set("ray_shadows","off") # 消除投射阴影
-        cmd.set('cartoon_highlight_color') # 增加不可见区域
-        cmd.set('cartoon_fancy_helices') # β折叠优化
-        cmd.set('cartoon_transparency','0.5') # 透明度设置0.5
+        if grey: cmd.set('cartoon_color','grey1', selection=obj_name)
+        cmd.set('stick_transparency','0.1', selection=obj_name)
+        cmd.set("ray_shadows","off", selection=obj_name)
+        cmd.set('cartoon_highlight_color', selection=obj_name)
+        cmd.set('cartoon_fancy_helices', selection=obj_name)
+        cmd.set('cartoon_transparency','0.5', selection=obj_name)
 
     @staticmethod
     def remove():
