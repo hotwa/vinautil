@@ -17,8 +17,8 @@ anaconda upload /path/to/conda-package.tar.bz2
 ```
 
 ```shell
-micromamba create -n condabuild python=3 conda-build anaconda-client -c conda-forge -y
-micromamba activate condabuild
+conda create -n condabuild python=3 conda-build anaconda-client -c conda-forge -y
+conda activate condabuild
 cd <source code dir>
 anaconda login
 conda build .

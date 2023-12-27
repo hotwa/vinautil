@@ -3,6 +3,7 @@ channels:
   - microsoft
   - oddt
   - conda-forge
+  - bioconda
   - http://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
   - https://mirrors.aliyun.com/anaconda/cloud/ursky
   - https://mirrors.aliyun.com/anaconda/cloud/stackless
