@@ -1,7 +1,7 @@
 ## install vinautil
 
 ```shell
-conda create -n my_env_test -c pylyzeng vinautil -y
+conda create -n my_env_test -c pylyzeng -c conda-forge -c bioconda vinautil -y
 ```
 
 ## build anaconda package
