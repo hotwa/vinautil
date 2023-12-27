@@ -13,13 +13,14 @@ from vinautil.vutils.spyrmsd_load import symmrmsd_mol2_list
 from vinautil.vina import Vina
 from vinautil.pymolutils.mutagenesis import Mutagenesis_site
 
+# 获取当前 Python 解释器的位置
+python_exec_prefix = Path(sys.exec_prefix)
 here = Path(__file__).parent.resolve()
-conda_prefix = Path(os.environ.get('CONDA_PREFIX'))
-python2_interpreter = conda_prefix.joinpath('bin/python2')
-python3_interpreter = conda_prefix.joinpath('bin/python3')
-prepare_ligand4 = conda_prefix.joinpath('MGLToolsPckgs/AutoDockTools/Utilities24/prepare_ligand4.py')
-prepare_receptor4 = conda_prefix.joinpath('MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py')
-mk_prepare_ligand = conda_prefix.joinpath('bin/mk_prepare_ligand.py')
+python2_interpreter = python_exec_prefix.joinpath('bin/python2')
+python3_interpreter = python_exec_prefix.joinpath('bin/python3')
+prepare_ligand4 = python_exec_prefix.joinpath('MGLToolsPckgs/AutoDockTools/Utilities24/prepare_ligand4.py')
+prepare_receptor4 = python_exec_prefix.joinpath('MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py')
+mk_prepare_ligand = python_exec_prefix.joinpath('bin/mk_prepare_ligand.py')
 
 def dockvina(receptor:Path, ligand:Path, center:List[float], box_size:List[float], 
              exhaustiveness:int =32,n_poses:int =20,out_n_poses:int = 20):
