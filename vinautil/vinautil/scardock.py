@@ -60,21 +60,23 @@ def SCARdockbase(receptor: Path, ligand: Path, chain: str, site: str):
     while p.poll() is None:  # progress still runing
             subprocess_read_res = p.stdout.read().decode('utf-8')
             logger.info(f'''Task record : {datetime.datetime.now()}:\n {subprocess_read_res}''')
-    # prepare ligand dock file(mol2 file)
+    # prepare ligand dock file(file)
     ligand = Path(ligand)
     ligand_pdbqt = ligand.parent.joinpath(f"{ligand.stem}.pdbqt")
+    file_polarHydrogens = ligand.parent.joinpath(f'{ligand.stem}_add_polarHydrogens.mol2')
     if not ligand.exists():
         raise FileNotFoundError(f'{ligand} not found')
     # use openbabel add polar hydrogens
     print('Add polar hydrogens(Openbabel): ', ligand.name)
-    molH = pybel.readfile('mol2', ligand.as_posix())
+    lfmt = ligand.suffix[1:]
+    molH = pybel.readfile(lfmt, ligand.as_posix())
     molH = next(molH)
     molH.OBMol.DeleteHydrogens()
     molH.OBMol.AddPolarHydrogens()
-    molH.write('mol2', ligand.as_posix(), overwrite=True)
+    molH.write('mol2', file_polarHydrogens.as_posix(), overwrite=True)
     # use meeko backend prepare ligand, optional MGLtools prepare_ligand4.py
     print('Prepare PDBQT ligand file: ', ligand.name)
-    CMD_ = f'{python3_interpreter} {mk_prepare_ligand} -i {ligand.as_posix()} -o {ligand_pdbqt.as_posix()}'
+    CMD_ = f'{python3_interpreter} {mk_prepare_ligand} -i {file_polarHydrogens.as_posix()} -o {ligand_pdbqt.as_posix()}'
     p = subprocess.Popen(CMD_, shell=True, stdout=subprocess.PIPE)
     while p.poll() is None:  
             subprocess_read_res = p.stdout.read().decode('utf-8')
@@ -83,7 +85,7 @@ def SCARdockbase(receptor: Path, ligand: Path, chain: str, site: str):
     cmd.reinitialize('everything')
     cmd.load(receptor.as_posix())
     coordinates = []
-    cmd.select('res_covalent_atoms', f'chain {chain} and resi {site} and name CB') # select residue covalent site beta carbon, be careful GLY have no side chain with beta carbon
+    cmd.select('res_covalent_atoms', f'chain {chain} and resi {site} and name CA') # select residue covalent site apha carbon, be careful GLY have no side chain with beta carbon
     cmd.iterate_state('0', 'res_covalent_atoms', 'coordinates.append([x,y,z])', space=locals())
     if len(coordinates) == 1:
         center = coordinates[0]
@@ -94,9 +96,9 @@ def SCARdockbase(receptor: Path, ligand: Path, chain: str, site: str):
     # ! be careful, orginal molecule coordinate should in docking box
     print("The molecular coordinates of the input mol2 file should be within a range of 40 angstroms, with the covalent residue's beta carbon atom as the center of the extended box.")
     docked_file = dockvina(receptor=receptor_pdbqt, ligand=ligand_pdbqt, center=center, box_size=[40, 40, 40], exhaustiveness=32,n_poses=20,out_n_poses = 20)
-    # restore mol2
+    # restore mol2 (update coordinate)
     print('Restore mol2 file: ', ligand.name)
-    ins = PDBQTtoMol2(ligand.read_text(),ligand_pdbqt.read_text(),PDBQTparser(docked_file).get_modules())
+    ins = PDBQTtoMol2(file_polarHydrogens.read_text(),ligand_pdbqt.read_text(),PDBQTparser(docked_file).get_modules())
     res_mol2 = ins.to_string() # mol2 string list
     # write mol2
     for n,m in enumerate(res_mol2):
