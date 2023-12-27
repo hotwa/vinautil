@@ -35,7 +35,7 @@ English(./README.md) | [中文]
 ### 安装
 
 ```shell
-conda create -n vinautil_env -c pylyzeng vinautil --yes
+conda create -n vinautil_env -c pylyzeng -c conda-forge -c bioconda vinautil --yes
 conda activate vinautil_env
 ```
 
